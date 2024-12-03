@@ -7,7 +7,7 @@
 </script>
 <?php
 
-include('../inat/inat_functions.php');
+include('inat_functions.php');
 
 
 
