@@ -1,3 +1,6 @@
+To Use:
+Just run inat_test.php and pass "taxon_id" as a url param. So inat_test.php?taxon_id=12345
+
 Still in progress. Goal is: given a taxon ID, show bar graphs for each state's activity for the taxon, in order to see what months the taxon is most active.
 
 Currently it is broken - The iNat API croaks on me after 3 states. Even with delaying each API call 0.5 seconds, the API still fails pretty quickly. The first 3 states tend to work fine. 
