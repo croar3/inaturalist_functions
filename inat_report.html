@@ -15,17 +15,9 @@
 </body>
 <script type="text/javascript">
 
-// function getMonthlyObservations($placeId, $taxonId, $monthNumber) {
-//     $curl = curl_init();
-//     curl_setopt_array($curl, array(
-//         CURLOPT_URL => 'https://api.inaturalist.org/v1/observations/?place_id='.$placeId.'&per_page=0&month='.$monthNumber.'&taxon_id='.$taxonId,
-//         CURLOPT_RETURNTRANSFER => true
-//     ));
-//     $response = curl_exec($curl);
-//     curl_close($curl);
-//     $json = json_decode($response, true);
-//     return $json;
-// }
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function doAjax(url) {
     let result;
@@ -46,36 +38,16 @@ async function getMonthlyObservations(placeId, taxonId, monthNumber) {
     return await doAjax(url);
 }
 
-
-
-
-// function getYearlyObservations($placeId, $taxonId) {
-//     $array = array();
-//     for ($i = 1; $i <= 12; $i++) {
-//         $monthData = getMonthlyObservations($placeId, $taxonId, $i);
-//         if (isset($monthData['total_results'])) {
-//             $array[] = $monthData['total_results'];
-//         }
-//         sleep(0.5);
-//     }
-//     return $array;
-// }
-
-
 async function getYearlyObservations(placeId, taxonId) {
     var results = [];
-    setTimeout(function() {
-        for (var i = 1; i <= 12; i++) {
-            let monthData = getMonthlyObservations(placeId, taxonId, i).then( (monthData) => {
-                if (monthData.hasOwnProperty('total_results')) {
-                    results.push(monthData['total_results']);
-                }
-            });
+    for (var i = 1; i <= 12; i++) {
+        let monthData = await getMonthlyObservations(placeId, taxonId, i);
+        if (monthData.hasOwnProperty('total_results')) {
+            results.push(monthData['total_results']);
         }
-    }, 3000)
+    }
     return results;
 }
-
 
     var xValues = ['January', 'Feburary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var stateMap = [
@@ -133,30 +105,32 @@ async function getYearlyObservations(placeId, taxonId) {
 
     var taxon_id = 1456562;
 
-for (var i = 0; i < 8; i++) {
+for (var i = 0; i < 2; i++) {
     $('body').append('<canvas id="myChart-'+i+'" style="width:100%;max-width:600px"></canvas>');
-    (function(index) {
-        getYearlyObservations(stateMap[i].place_id, taxon_id).then( (data) => {
-            console.log(data);
-            new Chart("myChart-"+index, {
-                type: "bar",
-                data: {
-                    labels: xValues,
-                    datasets: [{
-                        backgroundColor: "green",
-                        data: data
-                    }]
-                },
-                options: {
-                    legend: {display: false},
-                    title: {
-                        display: true,
-                        text: stateMap[index].name
+    // sleep(5000).then( () => {
+        (function(index) {
+            getYearlyObservations(stateMap[index].place_id, taxon_id).then( (data) => {
+                console.log(data);
+                new Chart("myChart-"+index, {
+                    type: "bar",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            backgroundColor: "green",
+                            data: data
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        title: {
+                            display: true,
+                            text: stateMap[index].name
+                        }
                     }
-                }
+                });
             });
-        });
-    })(i);
+        })(i);
+    // });
 }
 
 </script>
