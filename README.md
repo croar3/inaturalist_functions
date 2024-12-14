@@ -1,4 +1,10 @@
-To Use:
+To use the HTML:
+Just view in a browser. The taxon ID is hard coded for now
+
+
+
+
+To Use PHP:
 Just run inat_test.php and pass "taxon_id" as a url param. So inat_test.php?taxon_id=12345
 
 Still in progress. Goal is: given a taxon ID, show bar graphs for each state's activity for the taxon, in order to see what months the taxon is most active.
